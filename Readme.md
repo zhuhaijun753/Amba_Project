@@ -50,7 +50,7 @@ Build Done
 烧写工具的路径为：/nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_AmbaUSB_v4.2.6.zip
 烧写工具可以运行在不同的OS上——Ubuntu 18.04或者Windows。安装烧写工具。
 ## 2.2 用USB线连接山海关板子和PC机，用串口线连接山海关板子的UART串口
-
+![avatar](images/Picture1.png)
 
 ## 2.3 打开烧写工具，界面如下：
 
