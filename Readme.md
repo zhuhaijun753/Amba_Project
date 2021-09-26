@@ -1,13 +1,13 @@
-### 1 搭建山海关的开发环境
-# 1.1 安装交叉编译工具链
-交叉编译工具链在nas服务器上，路径为：
-/nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_Toolchain_Linaro_2020.09.tar.xz。
-解压此文件，然后运行安装脚本：
-tar pxvf Ambarella_Toolchain_Linaro_2020.09.tar.xz
-cd Ambarella_Toolchain_Linaro_2020.09
-sudo ./ubuntuToolChain-linux5.4-202008
-这样交叉编译工具链就安装完成。
-1.2 clone山海关工程的仓库
+# 1 搭建山海关的开发环境
+## 1.1 安装交叉编译工具链
+交叉编译工具链在nas服务器上，路径为：</br>
+/nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_Toolchain_Linaro_2020.09.tar.xz。</br>
+解压此文件，然后运行安装脚本：</br>
+tar pxvf Ambarella_Toolchain_Linaro_2020.09.tar.xz</br>
+cd Ambarella_Toolchain_Linaro_2020.09</br>
+sudo ./ubuntuToolChain-linux5.4-202008</br>
+这样交叉编译工具链就安装完成。</br>
+## 1.2 clone山海关工程的仓库
 仓库地址为http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2
 1.3 source build.sh
 进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut目录，运行source build.sh
