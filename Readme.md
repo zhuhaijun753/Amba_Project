@@ -10,9 +10,13 @@ sudo ./ubuntuToolChain-linux5.4-202008
 ```
 这样交叉编译工具链就安装完成。</br>
 ## 1.2 clone山海关工程的仓库
-仓库地址为http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2</br>
+仓库地址为：http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2</br>
 ## 1.3 source build.sh
 进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut目录，运行source build.sh</br>
+```
+cd shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut
+source build.sh
+```
 如果出现Check env error, please install mkfs.jffs2genext2fsmkcramfs错误。需要安装这些库：</br>
 mkfs.jffs2：sudo apt-get install mtd-utils</br>
 genext2fs：sudo apt install genext2fs</br>
@@ -32,10 +36,10 @@ TOOLCHAIN VERSION: 10.2.1
 Build Linux-5.4 with cv25_emmc_kernel_config ...
 ```
 ## 1.4 编译山海关项目工程
-进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut/目录中，运行make命令：</br>
+进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut/目录中，运行make命令：
 ```
-cd shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnuts</br>
-make -j8</br>
+cd shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnuts
+make -j8
 ```
 编译完成后，终端显示信息如下所示：
 ```
@@ -46,10 +50,10 @@ Build Amboot ...
 Build AmBST ...
 Build Done
 ```
-这样就在shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/下生成了out文件夹，里面包含编译生成的镜像和可执行程序，下面烧写步骤中的elf文件就在这个文件夹里。
+这样就在shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/下生成了out文件夹，里面包含编译生成的镜像和可执行程序，下面烧写步骤中的elf文件就在这个out/文件夹里。
 # 2 针对新拿到的山海关板子烧写
 ## 2.1 安装烧写工具
-烧写工具的路径为：/nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_AmbaUSB_v4.2.6.zip
+烧写工具的路径为：/nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_AmbaUSB_v4.2.6.zip。</br>
 烧写工具可以运行在不同的OS上——Ubuntu 18.04或者Windows。安装烧写工具。
 ## 2.2 用USB线连接山海关板子和PC机，用串口线连接山海关板子的UART串口
 ![avatar](images/Picture1.png)
@@ -87,8 +91,9 @@ gateway 192.168.1.1
 然后运行exportfs -a命令，使修改后的/etc/exports立即生效。
 ## 3.3 在板子上进行mount
 在板子上建立nfs对应的（对应主机的/home/public/shanhaiguan_nfs）文件夹：/nfs_zhuhaijun。然后运行如下mount命令：
-mount -t nfs -o nolock,vers=3 192.168.1.110:/home/public/shanhaiguan_nfs /nfs_                                                                                          
-zhuhaijun
+```
+mount -t nfs -o nolock,vers=3 192.168.1.110:/home/public/shanhaiguan_nfs /nfs_zhuhaijun
+```
 这样就完成了nfs的挂载，可以看到PC机上的文件可以在板子上显示。
 # 4 安霸SDK的特点
 ## 4.1 SDK软件架构
