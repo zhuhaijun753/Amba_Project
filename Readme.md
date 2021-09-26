@@ -2,10 +2,12 @@
 ## 1.1 安装交叉编译工具链
 交叉编译工具链在nas服务器上，路径为：</br>
 /nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_Toolchain_Linaro_2020.09.tar.xz。</br>
-解压此文件，然后运行安装脚本：</br>
-tar pxvf Ambarella_Toolchain_Linaro_2020.09.tar.xz</br>
-cd Ambarella_Toolchain_Linaro_2020.09</br>
-sudo ./ubuntuToolChain-linux5.4-202008</br>
+解压此文件，然后运行安装脚本：
+```
+tar pxvf Ambarella_Toolchain_Linaro_2020.09.tar.xz
+cd Ambarella_Toolchain_Linaro_2020.09
+sudo ./ubuntuToolChain-linux5.4-202008
+```
 这样交叉编译工具链就安装完成。</br>
 ## 1.2 clone山海关工程的仓库
 仓库地址为http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2</br>
@@ -53,15 +55,15 @@ Build Done
 ![avatar](images/Picture1.png)
 
 ## 2.3 打开烧写工具，界面如下：
-
+![avatar](images/Picture2.png)
 由于我们的SOC为cv25，所以右面选择CV25。
 ## 2.4 短接山海关板子上的预留端点（POC[10]）可以进入USB烧写模式。我们这里使用镊子进行短接，如下图所示。基本步骤：POC[10]短接-->板子上电-->插上USB线-->点击烧写按钮。
-
+![avatar](images/Picture3.png)
 ## 2.5 进行烧写
 点击蓝色按钮进行烧写。
-
+![avatar](images/Picture4.png)
 ## 2.6 烧写完成（图片两个红框都满足，代表烧写完成）：
-
+![avatar](images/Picture5.png)
 
 # 3 建立NFS
 可以参看《Ambarella_CV2x_UG_Flexible_Linux_SDK3.0_Code_Building_and_Debug_Environment.pdf》文档的“6.5Network Sharing: NFS”部分。
@@ -90,7 +92,7 @@ zhuhaijun
 这样就完成了nfs的挂载，可以看到PC机上的文件可以在板子上显示。
 # 4 安霸SDK的特点
 ## 4.1 SDK软件架构
-
+![avatar](images/Picture6.png)
 ## 4.2 SDK目录结构
 SDK的顶层目录为shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella，现在对目录里包含的内容进行简要说明：</br>
 AMBoot/： Boot loader, board support toolkit, and file system information about the partitions.</br>
