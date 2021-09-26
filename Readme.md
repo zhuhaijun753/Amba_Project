@@ -1,5 +1,5 @@
-###1 搭建山海关的开发环境
-#1.1 安装交叉编译工具链
+### 1 搭建山海关的开发环境
+# 1.1 安装交叉编译工具链
 交叉编译工具链在nas服务器上，路径为：
 /nas/users/platform/AMBA_4_CV25_linux_shanhaiguan/tools/Ambarella_Toolchain_Linaro_2020.09.tar.xz。
 解压此文件，然后运行安装脚本：
