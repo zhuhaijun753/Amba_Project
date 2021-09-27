@@ -10,18 +10,18 @@ sudo ./ubuntuToolChain-linux5.4-202008
 ```
 这样交叉编译工具链就安装完成。
 ## 1.2 clone工程的仓库
-仓库地址为：http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2  
+&emsp;&emsp;仓库地址为：http://192.168.1.124/liyunlong/shg_amba_cv25_sdk_3_0_2  
 ## 1.3 source build.sh
-进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut目录，运行source build.sh
+&emsp;&emsp;进入shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut目录，运行source build.sh
 ```
 cd shg_amba_cv25_sdk_3_0_2/cv25_linux_sdk_3.0.2/ambarella/boards/cv25_hazelnut
 source build.sh
 ```
-如果出现Check env error, please install mkfs.jffs2genext2fsmkcramfs错误。需要安装这些库：  
+&emsp;&emsp;如果出现Check env error, please install mkfs.jffs2genext2fsmkcramfs错误。需要安装这些库：  
 mkfs.jffs2：sudo apt-get install mtd-utils  
 genext2fs：sudo apt install genext2fs  
 mkcramfs：sudo apt-get install mkcramfs  
-如果提示缺少crypto，那么就需要安装crypto python库：  
+&emsp;&emsp;如果提示缺少crypto，那么就需要安装crypto python库：  
 sudo apt-get install python3-crypto  
 再次source build.sh，直到没有错误出现，如下所示：
 ```
@@ -60,7 +60,7 @@ Build Done
 
 ## 2.3 打开烧写工具，界面如下：
 ![avatar](images/Picture2.png)
-由于我们的SOC为cv25，所以右面选择CV25。
+&emsp;&emsp;由于我们的SOC为cv25，所以右面选择CV25。
 ## 2.4 短接板子上的预留端点（POC[10]）可以进入USB烧写模式。我们这里使用镊子进行短接，如下图所示。基本步骤：POC[10]短接-->板子上电-->插上USB线-->点击烧写按钮。
 ![avatar](images/Picture3.png)
 ## 2.5 进行烧写
@@ -202,13 +202,13 @@ Application to run face detection ( MTCNN )
 ### 5.1.1 准备CNN模型
 &emsp;&emsp;为了在CV2x上实现最佳性能，安霸建议对CNN模型进行剪枝（pruning）。CV2x包含一个新的、更快的卷积引擎，称为inception卷积引擎（ICE）。但是，由于ICE专门支持定点数据格式，因此数据格式必须为FX16或FX8。CNNGen 2.0将模型参数转换为FX16或FX8数据格式。如果原始模型基于FX32，则在转换过程中可能会丢失精度（16位的精度损失较小）。另外，在使用8位量化实现最佳性能的同时，可能会丢失精度。因此，在使用CNNGen之前，用户应该首先剪枝、执行量化，然后重新训练程序。
 ### 5.1.2 模型优化
-![avatar](images/Picture10.png)
-用户可以利用AmbaCaffe执行剪枝和量化。
+![avatar](images/Picture10.png)  
+&emsp;&emsp;用户可以利用AmbaCaffe执行剪枝和量化。
 （1）剪枝pruning  
 &emsp;&emsp;剪枝方法包括连接剪枝（connection pruning）、系数剪枝（coefficient pruning）等。CVflow仅从系数剪枝（稀疏化）中获益，因为它包含高密度的零值系数。由于CVflow执行引擎可以绕过已知结果而不执行MAC，因此当系统受到MAC限制时，会有直接加速。用户可以实现低非零系数密度，同时在许多神经网络上保持准确性并获得3-4倍的速度提升。
 注:某些加速引擎可能无法从该技术所需的并行体系结构中获益。连接剪枝应用不同的剪枝技术。通过减少已处理的卷积核的数量，连接剪枝可以帮助CVflow和其他引擎。  
 （2）量化  
-虽然浮点（32位）用于训练和推理，但定点8 bit和定点16 bit速度更快、更节约资源。因此，所有加速引擎在边缘使用定点8 bit和定点16 bit进行推理。
+&emsp;&emsp;虽然浮点（32位）用于训练和推理，但定点8 bit和定点16 bit速度更快、更节约资源。因此，所有加速引擎在边缘使用定点8 bit和定点16 bit进行推理。
 ### 5.1.3移植流程
 ![avatar](images/Picture11.png)
 # 附录A
