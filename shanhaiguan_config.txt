@@ -1,0 +1,379 @@
+init.sh --na
+modprobe ds90ub954 id=0x0100
+modprobe ar0233_mipi_brg slave=0
+test_tuning -a &
+test_encode -i 0  --hdmi 1080p
+rtsp_server &
+test_encode -A -h 480p -e &
+
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x01
+modprobe ar0233_mipi_brg slave=0
+test_tuning -a &
+test_encode -i 0  -f 10--hdmi 1080p
+rtsp_server &
+test_encode -A -h 720p -e &
+test_encode -A -h 480p  -b 0-e -B -h 480p -b 1 -e &
+
+
+
+
+init.sh --na
+modprobe ds90ub954 id=0x03
+modprobe ar0233_mipi_brg slave=0
+test_aaa_service -a &
+test_encode -i 0 --hdmi 1080p
+rtsp_server &
+test_encode -A -h 480p  -b 0-e -B -h 480p -b 1 -e &
+test_encode -A -h 480p -e &
+
+
+
+
+
+//two
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x03
+modprobe ar0233_mipi_brg slave=0
+test_aaa_service -a &
+test_encode --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua 
+rtsp_server &
+test_encode -A -h 480p -b 0 -e  -B -h 480p -b 1 -e &
+
+
+
+//
+init.sh --na
+modprobe ds90ub954 id=0x03
+modprobe ar0233_mipi_brg  slave=1 super_gain=1
+test_aaa_service -a &
+test_encode --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua --enc-mode 0
+rtsp_server &
+test_encode -A -h 480p -b 0 -e -B -h 480p -b 1 -e &
+
+
+init.sh --na
+modprobe ds90ub954 id=0x01
+modprobe ar0233_mipi_brg slave=0 
+test_aaa_service -a &
+test_encode  -i 1080p -f 30 --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1080p_linear.lua --hdr-mode 15
+rtsp_server &
+test_encode -A -m 1080p -b 0 &
+
+test_encode -i 1080p -f 30 --hdmi 1080p --raw-capture 1
+
+//
+init.sh --na
+modprobe ds90ub954 id=0x01 sen_rst_gpio=2 fsync_gpio=0 
+modprobe ar0233_mipi_brg  slave=1  trigger_gpio=3 super_gain=1 
+test_aaa_service -a &
+test_encode  -i 1080p -f 30 --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1080p_linear.lua --hdr-mode 15
+rtsp_server &
+test_encode -A -h 1080p -b 0 -e   &
+
+
+init.sh --na
+modprobe ds90ub954 id=0x01 vinc_id=0x0 sen_rst_gpio=2 fsync_gpio=0
+modprobe ar0233_mipi_brg super_gain=1
+test_aaa_service -a &
+test_encode  -i 0 --hdmi 1080p 
+rtsp_server &
+test_encode -A -h 1080p -b 0 -e  &
+
+//网络配置
+#vi /etc/network/interface
+//修改：iface eth0 inet static
+	address 192.168.1.122
+	netmask 255.255.255.0
+	gateway 192.168.1.102
+	dns-nameserver 192.168.1.102 
+//更换100M
+ethtool -s eth0 speed 100 duplex full autoneg off
+//查看图片
+ffplay -f rawvideo -video_size 640x360  test_input_640x360_bak.yuv
+	 
+//nfs 挂载
+mount -t nfs -o nolock 192.168.1.146:/home/public/nfs_root /mnt
+
+
+raw图格式抓取：
+      test_encode -i 1080p -f 45  -i 0 --hdmi 1080p  --raw-capture 1
+      test_yuvcap -R -f 1 .
+      test_yuvcap -i 1 -R -f cap_raw
+test_yuvcap -i 0 -R -f 1			//注意只有一个buffer区
+yuv图抓取：
+	test_yuvcap -b 0 -Y -f 1.yuv -F 1 取一张
+	test_yuvcap -b 0 -Y -b 1 -Y  -f . 取两张图
+
+init.sh --na
+modprobe ds90ub954 id=0x01 mode=2  
+modprobe ar0144p_brg slave=1
+test_tuning -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_0144_1_720p.lua --enc-mode=0
+rtsp_server &  
+test_encode -A -h 720p -e &
+
+cat /proc/interrupts | grep vin  && echo "-----------------------------------------------------------------------------------------------"&& usleep 999998 && cat /proc/interrupts | grep vin
+
+//生成图标
+//指令	make sdk_doc
+
+
+//
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x01
+modprobe ar0233_mipi_brg slave=1
+test_aaa_service -a &
+test_encode  -f 30 --hdmi 1080p --resource-cfg /usr/local/bin/scripts/scripts/cv25_vin0_1080p_linear.lua
+rtsp_server &
+test_encode  -A -h 720p -b 0 -e &
+//test_encode -i 0 -f 45 --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua
+//A -h 480p  -b 0 -e
+
+init.sh --na
+modprobe ds90ub954 id=0x01
+modprobe ar0233_mipi_brg slave=1 
+test_aaa_service -a &
+test_encode -i 1080p -f 30  --hdmi 480p -X --bsize 1080p --bmaxsize 1080p -J -- btype enc --bsize 1080p  --bmaxsize 1080p -binsize 720p 
+rtsp_server &
+test_encode -A -h 480p  -b 0 -e  -C -h 480p -b 1 -e &
+
+--raw-capture 1 
+test_encode -i 1080p -f 30  --hdmi 480p -X --bsize 1080p --bmaxsize 1080p -J -- btype enc --bsize 1080p  --bmaxsize 1080p -binsize 720p
+
+
+//ambarella/prebuild/imgproc/img_data/arch_v5
+
+init.sh --na
+modprobe ds90ub954 id=0x0301 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg   slave=1 trigger_gpio=3 super_gain=1 
+test_aaa_service -a &
+test_encode -i 0 --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_2_1080p_linear.lua  --enc-mode 0 --hdmi 1080p 
+rtsp_server &
+test_encode -A -m 1080p -b 0 -e -B -m 1080p -b 1 -e -C -m 1080p -b 2 -e&
+
+//four
+init.sh --na
+modprobe ds90ub954 id=0x0303 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg   slave=1 trigger_gpio=3 super_gain=1
+test_aaa_service -a &
+test_encode -i 0 -f 20 --resource-cfg /usr/local/bin/scripts/cv25_four_1080p_linear.lua  --enc-mode 0 --hdmi 1080p 
+rtsp_server &
+test_encode -A -m 720p -b 0 -e -B -m 720p -b 1 -e  -C -m 720p -b 2 -e  -D -m 720p -b 3 -e &
+
+//third
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x0302 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg   slave=1 trigger_gpio=3 super_gain=1
+test_aaa_service -a &
+test_encode -i 0 --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_2_1080p_linear.lua  --enc-mode 0 --hdmi 1080p 
+test_encode -A -m 1080p -b 0 -e -B -m 1080p -b 1 -e  -C -m 1080p -b 2 -e &
+rtsp_server &
+
+
+//两个小头
+mount -t nfs -o nolock 192.168.1.146:/home/public/nfs_root /mnt
+
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x03 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg   slave=1 trigger_gpio=3 super_gain=1
+test_aaa_service -a &
+test_encode -i 0 --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua  --enc-mode 0 --hdmi 1080p 
+test_encode -A -m 1080p -b 0 -e -B -m 1080p -b 1 -e &
+rtsp_server &
+
+
+//dange
+ethtool -s eth0 speed 100 duplex full autoneg off
+init.sh --na
+modprobe ds90ub954 id=0x02 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg   slave=1 trigger_gpio=3 super_gain=1 
+test_aaa_service -a &
+test_encode -i 0  --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1080p_linear.lua  --enc-mode 0
+test_encode -A -m 1080p -b 0 -e  &
+rtsp_server &
+
+//8.
+init.sh --na
+modprobe ds90ub954 id=0x300 dts_addr=1 sen_rst_gpio=2 fsync_gpio=0
+modprobe ar0233_mipi_brg slave=1
+test_aaa_service -a &
+test_encode  --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua  --enc-mode 0
+rtsp_server &
+test_encode -A -h 480p -b 0 -e  &-B -h 480p -b 1 -e &
+
+init.sh --na
+modprobe ds90ub954 id=0x03 
+modprobe ar0233_mipi_brg  slave=0
+test_aaa_service -a &
+test_encode  --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua  --enc-mode 0
+rtsp_server &
+test_encode -A -h 480p -b 0 -e  &-B -h 480p -b 1 -e &
+
+
+//查询第二路问题
+init.sh --na
+modprobe ds90ub954 id=0x01
+modprobe ar0233_mipi_brg slave=1
+test_aaa_service -a &
+test_encode --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1080p_linear.lua
+rtsp_server &
+test_encode -A -h 1080p -b 0 -e  &
+//8.31
+//单个 0144
+ethtool -s eth0 speed 100 duplex full autoneg off
+mode=2  sen_rst_gpio=0 fsync_gpio=1
+init.sh --na
+modprobe ds90ub954 id=0x02 
+modprobe ar0144p_brg slave=0
+test_tuning -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_0144_1_720p.lua --enc-mode=0
+rtsp_server &  
+test_encode -A -h 720p -e &
+//
+init.sh --na
+modprobe ds90ub954 id=0x0201 mode=2 fsync_int=1
+modprobe ar0144p_brg brg_id=0x3 slave=0
+test_tuning -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_0144_2_720p.lua --enc-mode=0
+rtsp_server &
+test_encode -A -h 720p -b 0 -e -B -h 720p -b 1 -e &
+
+//EVK
+
+init.sh --na
+modprobe ds90ub954 id=0x0301 fsync_gpio=0 sen_rst_gpio=1
+modprobe ar0233_mipi_brg  super_gain=1 slave=0 trigger_gpio=3
+test_aaa_service -a &
+test_encode  --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_2_1080p_linear.lua --hdr-mode 15
+test_encode -A -h 720p -b 0 -e   -B -h 720p -b 1 -e -C -h 720p -b 2 -e &
+rtsp_server &
+
+init.sh --na
+modprobe ds90ub954 id=0x0300 fsync_gpio=0 sen_rst_gpio=1 
+modprobe ar0233_mipi_brg  super_gain=1 slave=0 trigger_gpio=3
+test_aaa_service -a &
+test_encode  --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_1080p_linear.lua --hdr-mode 15
+test_encode -A -h 1080p -b 0 -e   -B -h 1080p -b 1 -e &
+rtsp_server &
+
+init.sh --na
+modprobe ds90ub954 id=0x0200
+modprobe ar0233_mipi_brg  super_gain=1 slave=0
+test_aaa_service -a &
+test_encode --hdmi 1080p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1080p_linear.lua --hdr-mode 15
+test_encode -A -h 1080p -b 0 -e  &
+rtsp_server &
+
+
+//max9286*************************************************************************************EVK  MAX9286*******************************************************************************************************
+
+//8路
+init.sh --na
+modprobe max9286 id=0xf0f dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+
+test_aaa_service -a &
+
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_eight_720p_linear.lua --enc-mode=0 --debug-stitched 1 
+
+test_encode -S 0 -m 720p -b 0 -e -S 1 -m 720p -b 1 -e  -S 2 -m 720p -b 2 -e -S 3 -m 720p -b 3 -e -S 4 -m 720p -b 4 -e  -S 5 -m 720p -b 5 -e -S 6 -m 720p -b 6 -e  -S 7 -m 720p -b 7 -e &
+
+test_encode -S 0 -h 720p -b 0 -e -S 1 -h 720p -b 1 -e  -S 2 -h 720p -b 2 -e -S 3 -h 720p -b 3 -e -S 4 -h 720p -b 4 -e  -S 5 -h 720p -b 5 -e -S 6 -h 720p -b 6 -e  -S 7 -m 720p -b 7 -e &
+
+//7路
+init.sh --na
+modprobe max9286 id=0xf0B dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+
+test_aaa_service -a &
+
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_senven_720p_linear.lua --enc-mode=0 --debug-stitched 1
+
+test_encode -S 0 -m 720p -b 0 -e -S 1 -m 720p -b 1 -e  -S 2 -m 720p -b 2 -e -S 3 -m 720p -b 3 -e -S 4 -m 720p -b 4 -e  -S 5 -m 720p -b 5 -e -S 6 -m 720p -b 6 -e &
+
+//6路
+init.sh --na
+modprobe max9286 id=0xf03 dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+
+test_aaa_service -a &
+
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_six_720p_linear.lua --enc-mode=0 --debug-stitched 1
+
+test_encode -A -h 720p -b 0 -e -B -h 720p -b 1 -e  -C -h 720p -b 2 -e -D -h 720p -b 3 -e -E -h 720p -b 4 -e  -F -h 720p -b 5 -e & 
+
+
+//5路
+init.sh --na
+modprobe max9286 id=0xf01 dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_five_720p_linear.lua --enc-mode=0
+test_encode -A -m 720p -b 0 -e -B -m 720p -b 1 -e  -C -m 720p -b 2 -e -D -m 720p -b 3 -e -E -m 720p -b 4 -e   &
+
+//4
+init.sh --na
+modprobe max9286 id=0x0f00 dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_four_720p_linear.lua --enc-mode=0
+test_encode -A -h 720p -b 0 -e -B -h 720p -b 1 -e  -C -h 720p -b 2 -e -D -h 720p -b 3 -e   &
+
+//4
+init.sh --na
+modprobe max9286 id=0x00f dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_four_720p_linear.lua --enc-mode=0
+test_encode -A -m 720p -b 0 -e -B -m 720p -b 1 -e  -C -m 720p -b 2 -e -D -m 720p -b 3 -e  &
+//2路
+init.sh --na
+modprobe max9286 id=0x00A dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_vin0_1_2_0144_720p_linear.lua --enc-mode=0
+test_encode -A -m 720p -b 0 -e   -B -m 720p -b 1 -e &
+
+//1路
+init.sh --na
+modprobe max9286 id=0x0800 dts_addr=1
+modprobe ar0144p_brg brg_id=0x3 slave=1
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_vin0_720p_linear.lua --enc-mode=0
+test_encode -A -m 720p -b 0 -e  &
+
+//MAX9296********************************************************************************************SHG   MAX9296*****************************************************************************************
+init.sh --n
+modprobe max9296 id=0x01 dts_addr=1 gmsl_mode=1
+modprobe ar0144p_brg brg_id=0x4 slave=0
+test_aaa_service -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_vin0_720p_linear.lua --enc-mode=0
+test_encode -A -m 720p -b 0 -e  &
+**************************************************************************************************************************************************************************************************
+
+
+
+//查看寄存器
+test_vin -w 0xffff -d 0xf1
+test_vin -r 0x300A
+
+
+***************************************************************TI954+0144**********************************************
+mount -t nfs -o nolock 192.168.1.146:/home/public/nfs_root /mnt
+
+init.sh --na
+modprobe ds90ub954 id=0x01 mode=2  sen_rst_gpio=0 fsync_gpio=1
+modprobe ar0144p_brg slave=0
+test_tuning -a &
+test_encode --hdmi 720p --resource-cfg /usr/local/bin/scripts/cv25_0144_1_720p.lua --enc-mode=0
+rtsp_server &  
+test_encode -A -h 720p -e &
+*************************************************************************************************************************
+
+
